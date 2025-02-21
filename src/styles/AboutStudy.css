@@ -1,14 +1,19 @@
 .about-study {
     padding: 2rem;
     background-color: #fff;
+    background: url(../assets/nonurban.jpg) no-repeat center center/cover;
+    opacity: 0.9;
   }
   
   .about-study h2, .about-study h3 {
     text-align: center;
+    color: rgb(0, 0, 0);
     margin-bottom: 1rem;
   }
   
   .about-study p, .about-study li {
+    color: rgb(0, 0, 0);
+    animation: fadeIn 2s ease-in-out;
     font-size: 1rem;
     line-height: 1.5;
   }
