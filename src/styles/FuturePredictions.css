@@ -1,0 +1,14 @@
+.future-predictions {
+    padding: 2rem;
+    background-color: #fff;
+  }
+  
+  .future-predictions h2, .future-predictions h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .future-predictions p {
+    text-align: center;
+  }
+  

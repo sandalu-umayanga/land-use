@@ -1,0 +1,15 @@
+.about-study {
+    padding: 2rem;
+    background-color: #fff;
+  }
+  
+  .about-study h2, .about-study h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .about-study p, .about-study li {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  

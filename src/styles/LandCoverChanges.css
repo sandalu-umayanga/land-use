@@ -1,0 +1,15 @@
+.land-cover-changes {
+    padding: 2rem;
+    background-color: #f9f9f9;
+  }
+  
+  .land-cover-changes h2, .land-cover-changes h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .land-cover-changes p {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  

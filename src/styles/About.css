@@ -1,0 +1,37 @@
+/* src/pages/About.css */
+.about-container {
+    padding: 20px;
+    max-width: 900px;
+    width: 100%;
+    font-family: 'Helvetica', sans-serif;
+  }
+  
+  .about-container h2,
+  .about-container h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    color: #a5cdfc;
+    font-size: 2rem;
+  }
+  
+  .about-container ul {
+    margin-left: 100px;
+    list-style: disc;
+  }
+
+  .about-container p {
+    margin-bottom: 20px;
+  }
+
+  .about-container li {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .about-container {
+
+    }
+  }
+  
