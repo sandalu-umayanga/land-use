@@ -1,0 +1,321 @@
+.map-viewer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Controls for the map */
+.map-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  gap: 1rem;
+}
+
+/* Zoom controls */
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 50px;
+  padding: 0.3rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: white;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.zoom-button:hover:not(:disabled) {
+  background-color: #eee;
+  transform: translateY(-2px);
+}
+
+.zoom-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.zoom-level {
+  padding: 0 0.8rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Filter controls */
+.map-filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-button {
+  background-color: transparent;
+  border: 1px solid #ddd;
+  border-radius: 50px;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+  opacity: var(--opacity, 1);
+}
+
+.filter-button:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  transform: translateY(-2px);
+}
+
+.filter-button.active {
+  background-color: var(--color, #4caf50);
+  color: white;
+  border-color: var(--color, #4caf50);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.color-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--color, #ccc);
+}
+
+/* Map display container */
+.map-display-container {
+  width: 100%;
+  height: 400px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f5f5f5;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+}
+
+.map-display-container.zoomed {
+  cursor: grabbing;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
+}
+
+.map-image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: filter 0.3s ease;
+}
+
+/* Loading state */
+.map-image-container.loading .map-image {
+  opacity: 0.3;
+}
+
+.map-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(76, 175, 80, 0.2);
+  border-left-color: #4caf50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Highlight filters for land types */
+.highlight-agricultural .map-image {
+  filter: saturate(0.7) contrast(0.9);
+}
+
+.highlight-agricultural ~ .map-overlays .map-highlight.agricultural {
+  display: block;
+}
+
+.highlight-forests .map-image {
+  filter: saturate(0.7) contrast(0.9);
+}
+
+.highlight-water .map-image {
+  filter: saturate(0.7) contrast(0.9);
+}
+
+.highlight-developed .map-image {
+  filter: saturate(0.7) contrast(0.9);
+}
+
+.highlight-developed ~ .map-overlays .map-highlight.developed {
+  display: block;
+}
+
+.highlight-barren .map-image {
+  filter: saturate(0.7) contrast(0.9);
+}
+
+/* Map overlays for highlighting specific areas */
+.map-overlays {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.map-highlight {
+  position: absolute;
+  border: 2px solid;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  animation: pulse 2s infinite;
+  display: none;
+}
+
+.map-highlight.agricultural {
+  border-color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+.map-highlight.forests {
+  border-color: #2e7d32;
+  background-color: rgba(46, 125, 50, 0.2);
+}
+
+.map-highlight.water {
+  border-color: #0288d1;
+  background-color: rgba(2, 136, 209, 0.2);
+}
+
+.map-highlight.developed {
+  border-color: #d32f2f;
+  background-color: rgba(211, 47, 47, 0.2);
+}
+
+.map-highlight.barren {
+  border-color: #ffa726;
+  background-color: rgba(255, 167, 38, 0.2);
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* Map info section */
+.map-info {
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.map-info h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.map-description {
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+}
+
+.year-comparison {
+  font-size: 0.9rem;
+  color: #666;
+  border-top: 1px solid #eee;
+  padding-top: 0.8rem;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .map-display-container {
+    height: 350px;
+  }
+  
+  .map-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .map-filter-controls {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    flex-wrap: nowrap;
+  }
+  
+  .type-name {
+    font-size: 0.75rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .map-display-container {
+    height: 300px;
+  }
+  
+  .type-name {
+    display: none;
+  }
+  
+  .filter-button {
+    padding: 0.4rem;
+  }
+  
+  .color-indicator {
+    margin: 0;
+  }
+  
+  .zoom-controls {
+    margin-bottom: 0.5rem;
+  }
+}
