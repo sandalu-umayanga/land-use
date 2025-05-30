@@ -2,13 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/MapViewer.css';
 
-// Import or define land cover maps for different years
-// These would be your actual map images for each year
+// Import images properly in React
+// Either import them directly (recommended):
+import map1956 from '../assets/maps/land-cover-1956.jpeg';
+import map2000 from '../assets/maps/land-cover-2000.jpeg';
+import map2014 from '../assets/maps/land-cover-2014.jpeg';
+import map2023 from '../assets/maps/land-cover-2023.jpeg';
+//import placeholderMap from '/assets/maps/placeholder-map.jpg';
+
+// Or use public folder with absolute paths:
 const mapImages = {
-  '1956': '/assets/maps/land-cover-1956.jpg',
-  '2000': '/assets/maps/land-cover-2000.jpg',
-  '2014': '/assets/maps/land-cover-2014.jpg',
-  '2023': '/assets/maps/land-cover-2023.jpg',
+  '1956': map1956,
+  '2000': map2000,
+  '2014': map2014,
+  '2023': map2023,
 };
 
 const MapViewer = ({ year }) => {
@@ -18,6 +25,7 @@ const MapViewer = ({ year }) => {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [activeLandType, setActiveLandType] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapError, setMapError] = useState(false);
 
   // Reset position when year changes
   useEffect(() => {
@@ -25,13 +33,17 @@ const MapViewer = ({ year }) => {
     setZoomLevel(1);
     setIsZoomed(false);
     setMapLoaded(false);
+    setMapError(false);
   }, [year]);
 
-  // Handle map dragging
+  // Handle map dragging with better constraints
   const handleDragEnd = (info) => {
     // Update the position based on drag
     const newX = position.x + info.offset.x;
     const newY = position.y + info.offset.y;
+    
+    // Optional: Add boundary checks here if needed
+    // Calculate max allowable drag based on container and map size
     
     setPosition({ x: newX, y: newY });
   };
@@ -41,6 +53,11 @@ const MapViewer = ({ year }) => {
     if (newZoomLevel >= 1 && newZoomLevel <= 3) {
       setZoomLevel(newZoomLevel);
       setIsZoomed(newZoomLevel > 1);
+      
+      // Reset position when zooming out completely
+      if (newZoomLevel === 1) {
+        setPosition({ x: 0, y: 0 });
+      }
     }
   };
 
@@ -57,6 +74,28 @@ const MapViewer = ({ year }) => {
     { id: 'developed', name: 'Developed Areas', color: '#d32f2f' },
     { id: 'barren', name: 'Barren Lands', color: '#ffa726' }
   ];
+
+  // Dynamic overlay positioning based on the map data
+  const getOverlayPositions = (landType, yearData) => {
+    // This would ideally come from a data source matching coordinates to years and land types
+    const overlayData = {
+      'agricultural': {
+        '1956': { top: '30%', left: '40%', width: '20%', height: '25%' },
+        '2000': { top: '35%', left: '35%', width: '18%', height: '20%' },
+        '2014': { top: '40%', left: '45%', width: '15%', height: '15%' },
+        '2023': { top: '42%', left: '48%', width: '12%', height: '12%' },
+      },
+      'developed': {
+        '1956': { top: '50%', left: '30%', width: '10%', height: '10%' },
+        '2000': { top: '50%', left: '30%', width: '20%', height: '15%' },
+        '2014': { top: '50%', left: '30%', width: '25%', height: '18%' },
+        '2023': { top: '50%', left: '30%', width: '30%', height: '20%' },
+      },
+      // Add data for other land types
+    };
+    
+    return (overlayData[landType] && overlayData[landType][year]) || null;
+  };
 
   return (
     <div className="map-viewer">
@@ -108,6 +147,7 @@ const MapViewer = ({ year }) => {
           className="map-wrapper"
           drag={isZoomed}
           dragConstraints={mapContainerRef}
+          dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
           onDragEnd={handleDragEnd}
           initial={false}
           animate={{
@@ -118,30 +158,43 @@ const MapViewer = ({ year }) => {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
           {/* Map Image */}
-          <div className={`map-image-container ${!mapLoaded ? 'loading' : ''}`}>
-            {!mapLoaded && (
+          <div className={`map-image-container ${!mapLoaded && !mapError ? 'loading' : ''} ${mapError ? 'error' : ''}`}>
+            {!mapLoaded && !mapError && (
               <div className="map-loading">
                 <div className="loading-spinner"></div>
                 <p>Loading map for {year}...</p>
               </div>
             )}
+            {mapError && (
+              <div className="map-error">
+                <p>Failed to load map for {year}.</p>
+                <button onClick={() => setMapError(false)} className="retry-button">Retry</button>
+              </div>
+            )}
             <img
-              src={mapImages[year] || '/assets/maps/placeholder-map.jpg'}
+              src={mapImages[year] || placeholderMap}
               alt={`Land cover map of Pannala DSD in ${year}`}
               className={`map-image ${activeLandType ? `highlight-${activeLandType}` : ''}`}
               onLoad={() => setMapLoaded(true)}
+              onError={() => setMapError(true)}
+              style={{ display: mapError ? 'none' : 'block' }}
             />
             
-            {/* Optional: Add overlay elements for interactive points */}
+            {/* Overlay elements for interactive points */}
             <div className="map-overlays">
-              {/* These would be positioned absolutely over specific areas */}
-              {activeLandType === 'agricultural' && (
-                <div className="map-highlight agricultural" style={{ top: '30%', left: '40%', width: '20%', height: '25%' }}></div>
+              {activeLandType === 'agricultural' && getOverlayPositions('agricultural', year) && (
+                <div 
+                  className="map-highlight agricultural" 
+                  style={getOverlayPositions('agricultural', year)}
+                ></div>
               )}
-              {activeLandType === 'developed' && (
-                <div className="map-highlight developed" style={{ top: '50%', left: '30%', width: '30%', height: '20%' }}></div>
+              {activeLandType === 'developed' && getOverlayPositions('developed', year) && (
+                <div 
+                  className="map-highlight developed" 
+                  style={getOverlayPositions('developed', year)}
+                ></div>
               )}
-              {/* More overlays as needed */}
+              {/* Add more land type overlays as needed */}
             </div>
           </div>
         </motion.div>
