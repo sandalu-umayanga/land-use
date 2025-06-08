@@ -1,14 +1,269 @@
 .socio-economic {
-    padding: 2rem;
-    background-color: #f9f9f9;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.socio-economic h2 {
+  color: #2e3440;
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eceff4;
+  font-size: 2.2rem;
+}
+
+.socio-economic h3 {
+  color: #3b4252;
+  margin: 1.5rem 0 1rem;
+  font-size: 1.6rem;
+}
+
+.socio-economic h4 {
+  color: #434c5e;
+  margin: 1.2rem 0 0.7rem;
+  font-size: 1.2rem;
+}
+
+.socio-economic p {
+  color: #4c566a;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.tab-navigation button {
+  background-color: #e5e9f0;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4c566a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-navigation button:hover {
+  background-color: #d8dee9;
+}
+
+.tab-navigation button.active {
+  background-color: #5e81ac;
+  color: white;
+  box-shadow: 0 2px 5px rgba(94, 129, 172, 0.3);
+}
+
+/* Tab Content */
+.tab-content {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Section styling */
+section {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eceff4;
+}
+
+section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Data table */
+.data-table {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.5rem;
+}
+
+th, td {
+  padding: 0.8rem;
+  text-align: left;
+  border: 1px solid #e5e9f0;
+}
+
+th {
+  background-color: #5e81ac;
+  color: white;
+  font-weight: 500;
+}
+
+tr:nth-child(even) {
+  background-color: #eceff4;
+}
+
+.data-source {
+  font-style: italic;
+  color: #6c757d;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+/* Chart container */
+.chart-container {
+  height: 400px;
+  margin: 1.5rem 0;
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Impact metrics */
+.factor-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.impact-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.metric {
+  background-color: #eceff4;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #5e81ac;
+}
+
+.metric-label {
+  font-size: 0.9rem;
+  color: #4c566a;
+  margin-top: 0.5rem;
+}
+
+/* Projection highlights */
+.projection-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.highlight-card {
+  background-color: #eceff4;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.highlight-card h4 {
+  margin-top: 0;
+  color: #5e81ac;
+  border-bottom: 2px solid #d8dee9;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.highlight-card ul {
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.highlight-card li {
+  margin-bottom: 0.5rem;
+  color: #4c566a;
+}
+
+/* Recommendations */
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.recommendation {
+  background-color: #eceff4;
+  border-radius: 8px;
+  padding: 1.2rem;
+  border-left: 4px solid #5e81ac;
+}
+
+.recommendation h4 {
+  margin-top: 0;
+  color: #5e81ac;
+  margin-bottom: 0.7rem;
+}
+
+.recommendation p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .factor-content {
+    grid-template-columns: 1fr;
   }
   
-  .socio-economic h2, .socio-economic h3 {
-    text-align: center;
-    margin-bottom: 1rem;
+  .impact-metrics {
+    flex-direction: row;
   }
   
-  .socio-economic p {
-    text-align: center;
+  .metric {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .projection-highlights {
+    grid-template-columns: 1fr;
   }
   
+  .tab-navigation {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .tab-navigation button {
+    width: 100%;
+  }
+  
+  .tab-content {
+    padding: 1.5rem;
+  }
+  
+  .impact-metrics {
+    flex-direction: column;
+  }
+  
+  .chart-container {
+    height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+}

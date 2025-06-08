@@ -319,3 +319,86 @@
     margin-bottom: 0.5rem;
   }
 }
+
+/* Add to your MapViewer.css file */
+
+/* Add visual indication that map is draggable when zoomed */
+.map-display-container.zoomed {
+  cursor: grab;
+  position: relative;
+}
+
+.map-display-container.zoomed.dragging {
+  cursor: grabbing;
+}
+
+/* Pan instructions tooltip */
+.pan-instructions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  z-index: 10;
+  opacity: 0.8;
+  pointer-events: none;
+  animation: fadeOut 1.5s forwards;
+  animation-delay: 3s;
+}
+
+@keyframes fadeOut {
+  from { opacity: 0.8; }
+  to { opacity: 0; }
+}
+
+/* Ensure the map wrapper can handle the pan/scroll */
+.map-wrapper {
+  will-change: transform;
+  touch-action: none;
+  transform-origin: center;
+}
+
+/* Ensure the image displays properly */
+.map-image {
+  max-width: none; /* Allow image to exceed container when zoomed */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Add scroll indicators when zoomed */
+.map-display-container.zoomed::before,
+.map-display-container.zoomed::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.map-display-container.zoomed::before {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.map-display-container.zoomed::after {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.map-display-container.zoomed:hover::before,
+.map-display-container.zoomed:hover::after {
+  opacity: 1;
+}
+

@@ -1,14 +1,163 @@
 .agricultural-land-use {
-    padding: 2rem;
-    background-color: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.agricultural-land-use h2 {
+  color: #2e7d32;
+  margin-bottom: 2rem;
+  font-size: 2.2rem;
+  text-align: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 1rem;
+}
+
+.agricultural-land-use h3 {
+  color: #33691e;
+  margin: 2rem 0 1rem;
+  font-size: 1.6rem;
+}
+
+.agricultural-land-use h4 {
+  color: #558b2f;
+  margin: 1.5rem 0 0.5rem;
+}
+
+section {
+  margin-bottom: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Data visualization section */
+.data-visualization {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.chart-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: 400px;
+}
+
+.data-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background-color: white;
+}
+
+th, td {
+  padding: 0.8rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #4caf50;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+caption {
+  caption-side: bottom;
+  font-style: italic;
+  padding: 0.5rem;
+  color: #666;
+}
+
+/* Map section */
+.map-container, .historical-map {
+  height: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  margin: 1rem 0 2rem;
+}
+
+/* Year selector */
+.year-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.year-buttons button {
+  padding: 0.5rem 1.5rem;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.year-buttons button:hover {
+  background-color: #d0d0d0;
+  transform: translateY(-2px);
+}
+
+.year-buttons button.active {
+  background-color: #4caf50;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Factors grid */
+.factors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.factor {
+  background-color: white;
+  padding: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #4caf50;
+}
+
+.factor h4 {
+  margin-top: 0;
+  color: #33691e;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .agricultural-land-use {
+    padding: 1rem;
   }
   
-  .agricultural-land-use h2, .agricultural-land-use h3 {
-    text-align: center;
-    margin-bottom: 1rem;
+  .data-visualization {
+    gap: 1rem;
   }
   
-  .agricultural-land-use p {
-    text-align: center;
+  .chart-container {
+    height: 300px;
   }
   
+  .map-container, .historical-map {
+    height: 350px;
+  }
+  
+  .factors-grid {
+    grid-template-columns: 1fr;
+  }
+}
