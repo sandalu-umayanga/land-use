@@ -1,72 +1,60 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { MapContainer, TileLayer, ImageOverlay, Polygon, LayerGroup, Tooltip, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import '../styles/MapViewer.css';
 
-// Import images properly in React
-// Either import them directly (recommended):
+// Import map images
 import map1956 from '../assets/maps/land-cover-1956.jpeg';
 import map2000 from '../assets/maps/land-cover-2000.jpeg';
 import map2014 from '../assets/maps/land-cover-2014.jpeg';
 import map2023 from '../assets/maps/land-cover-2023.jpeg';
-//import placeholderMap from '/assets/maps/placeholder-map.jpg';
 
-// Or use public folder with absolute paths:
-const mapImages = {
-  '1956': map1956,
-  '2000': map2000,
-  '2014': map2014,
-  '2023': map2023,
-};
+// Define map image bounds (you would need to define the correct coordinates)
+const imageBounds = [
+  [6.98, 79.85], // Southwest corner [lat, lng]
+  [7.10, 80.05]  // Northeast corner [lat, lng]
+];
+
+// Sample area polygons - replace with actual coordinates for your land types
+const landTypeAreas = {
+  agricultural: {
+    '1956': [[7.04, 79.91], [7.06, 79.91], [7.06, 79.94], [7.04, 79.94]],
+    '2000': [[7.04, 79.91], [7.06, 79.91], [7.06, 79.93], [7.04, 79.93]],
+    '2014': [[7.04, 79.91], [7.05, 79.91], [7.05, 79.92], [7.04, 79.92]],
+    '2023': [[7.04, 79.91], [7.045, 79.91], [7.045, 79.915], [7.04, 79.915]]
+  },
+  developed: {
+    '1956': [[7.05, 79.95], [7.06, 79.95], [7.06, 79.96], [7.05, 79.96]],
+    '2000': [[7.05, 79.95], [7.07, 79.95], [7.07, 79.97], [7.05, 79.97]],
+    '2014': [[7.04, 79.95], [7.07, 79.95], [7.07, 79.98], [7.04, 79.98]],
+    '2023': [[7.03, 79.94], [7.08, 79.94], [7.08, 79.99], [7.03, 79.99]]
+  },
+  // Add other land types similarly
+}
+
+// Component to fit map to bounds when year changes
+function MapController({ year }) {
+  const map = useMap();
+  
+  React.useEffect(() => {
+    map.fitBounds(imageBounds);
+  }, [map, year]);
+  
+  return null;
+}
 
 const MapViewer = ({ year }) => {
-  const mapContainerRef = useRef(null);
-  const [isZoomed, setIsZoomed] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [zoomLevel, setZoomLevel] = useState(1);
   const [activeLandType, setActiveLandType] = useState(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [mapError, setMapError] = useState(false);
-
-  // Reset position when year changes
-  useEffect(() => {
-    setPosition({ x: 0, y: 0 });
-    setZoomLevel(1);
-    setIsZoomed(false);
-    setMapLoaded(false);
-    setMapError(false);
-  }, [year]);
-
-  // Handle map dragging with better constraints
-  const handleDragEnd = (info) => {
-    // Update the position based on drag
-    const newX = position.x + info.offset.x;
-    const newY = position.y + info.offset.y;
-    
-    // Optional: Add boundary checks here if needed
-    // Calculate max allowable drag based on container and map size
-    
-    setPosition({ x: newX, y: newY });
+  
+  const mapImages = {
+    '1956': map1956,
+    '2000': map2000,
+    '2014': map2014,
+    '2023': map2023,
   };
 
-  // Handle zoom in/out
-  const handleZoomChange = (newZoomLevel) => {
-    if (newZoomLevel >= 1 && newZoomLevel <= 3) {
-      setZoomLevel(newZoomLevel);
-      setIsZoomed(newZoomLevel > 1);
-      
-      // Reset position when zooming out completely
-      if (newZoomLevel === 1) {
-        setPosition({ x: 0, y: 0 });
-      }
-    }
-  };
-
-  // Filter visible land types
-  const toggleLandType = (landType) => {
-    setActiveLandType(activeLandType === landType ? null : landType);
-  };
-
-  // Land use legend items with their respective colors
+  // Land use types
   const landTypes = [
     { id: 'agricultural', name: 'Agricultural Areas', color: '#4caf50' },
     { id: 'forests', name: 'Forests', color: '#2e7d32' },
@@ -75,129 +63,79 @@ const MapViewer = ({ year }) => {
     { id: 'barren', name: 'Barren Lands', color: '#ffa726' }
   ];
 
-  // Dynamic overlay positioning based on the map data
-  const getOverlayPositions = (landType, yearData) => {
-    // This would ideally come from a data source matching coordinates to years and land types
-    const overlayData = {
-      'agricultural': {
-        '1956': { top: '30%', left: '40%', width: '20%', height: '25%' },
-        '2000': { top: '35%', left: '35%', width: '18%', height: '20%' },
-        '2014': { top: '40%', left: '45%', width: '15%', height: '15%' },
-        '2023': { top: '42%', left: '48%', width: '12%', height: '12%' },
-      },
-      'developed': {
-        '1956': { top: '50%', left: '30%', width: '10%', height: '10%' },
-        '2000': { top: '50%', left: '30%', width: '20%', height: '15%' },
-        '2014': { top: '50%', left: '30%', width: '25%', height: '18%' },
-        '2023': { top: '50%', left: '30%', width: '30%', height: '20%' },
-      },
-      // Add data for other land types
-    };
-    
-    return (overlayData[landType] && overlayData[landType][year]) || null;
+  // Toggle land type filtering
+  const toggleLandType = (landType) => {
+    setActiveLandType(activeLandType === landType ? null : landType);
   };
 
   return (
     <div className="map-viewer">
-      <div className="map-controls">
-        <div className="zoom-controls">
-          <button 
-            onClick={() => handleZoomChange(zoomLevel - 0.5)}
-            disabled={zoomLevel <= 1}
-            className="zoom-button"
-            aria-label="Zoom out"
+      <div className="map-filter-controls">
+        {landTypes.map((type) => (
+          <button
+            key={type.id}
+            className={`filter-button ${activeLandType === type.id ? 'active' : ''}`}
+            style={{ 
+              '--color': type.color,
+              '--opacity': activeLandType && activeLandType !== type.id ? 0.4 : 1 
+            }}
+            onClick={() => toggleLandType(type.id)}
           >
-            -
+            <span className="color-indicator" style={{ backgroundColor: type.color }}></span>
+            <span className="type-name">{type.name}</span>
           </button>
-          <span className="zoom-level">{Math.round(zoomLevel * 100)}%</span>
-          <button 
-            onClick={() => handleZoomChange(zoomLevel + 0.5)}
-            disabled={zoomLevel >= 3}
-            className="zoom-button"
-            aria-label="Zoom in"
-          >
-            +
-          </button>
-        </div>
-        
-        <div className="map-filter-controls">
-          {landTypes.map((type) => (
-            <button
-              key={type.id}
-              className={`filter-button ${activeLandType === type.id ? 'active' : ''}`}
-              style={{ 
-                '--color': type.color,
-                '--opacity': activeLandType && activeLandType !== type.id ? 0.4 : 1 
-              }}
-              onClick={() => toggleLandType(type.id)}
-              aria-label={`Toggle ${type.name} visibility`}
-            >
-              <span className="color-indicator" style={{ backgroundColor: type.color }}></span>
-              <span className="type-name">{type.name}</span>
-            </button>
-          ))}
-        </div>
+        ))}
       </div>
 
-      <div 
-        className={`map-display-container ${isZoomed ? 'zoomed' : ''}`}
-        ref={mapContainerRef}
-      >
-        <motion.div
-          className="map-wrapper"
-          drag={isZoomed}
-          dragConstraints={mapContainerRef}
-          dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-          onDragEnd={handleDragEnd}
-          initial={false}
-          animate={{
-            scale: zoomLevel,
-            x: position.x,
-            y: position.y,
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      <div className="map-display-container">
+        <MapContainer
+          center={[(imageBounds[0][0] + imageBounds[1][0])/2, (imageBounds[0][1] + imageBounds[1][1])/2]} 
+          zoom={13}
+          style={{ height: "100%", width: "100%" }}
+          zoomControl={false}
         >
-          {/* Map Image */}
-          <div className={`map-image-container ${!mapLoaded && !mapError ? 'loading' : ''} ${mapError ? 'error' : ''}`}>
-            {!mapLoaded && !mapError && (
-              <div className="map-loading">
-                <div className="loading-spinner"></div>
-                <p>Loading map for {year}...</p>
-              </div>
-            )}
-            {mapError && (
-              <div className="map-error">
-                <p>Failed to load map for {year}.</p>
-                <button onClick={() => setMapError(false)} className="retry-button">Retry</button>
-              </div>
-            )}
-            <img
-              src={mapImages[year] || placeholderMap}
-              alt={`Land cover map of Pannala DSD in ${year}`}
-              className={`map-image ${activeLandType ? `highlight-${activeLandType}` : ''}`}
-              onLoad={() => setMapLoaded(true)}
-              onError={() => setMapError(true)}
-              style={{ display: mapError ? 'none' : 'block' }}
-            />
+          <MapController year={year} />
+          
+          {/* Base layer - can be a light background or satellite imagery */}
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            opacity={0.3}
+          />
+          
+          {/* Overlay the historical map image */}
+          <ImageOverlay
+            url={mapImages[year]}
+            bounds={imageBounds}
+            opacity={0.8}
+          />
+          
+          {/* Polygon overlays for land types */}
+          {landTypes.map(type => {
+            // Skip if filtering and this isn't the active type
+            if (activeLandType && activeLandType !== type.id) return null;
             
-            {/* Overlay elements for interactive points */}
-            <div className="map-overlays">
-              {activeLandType === 'agricultural' && getOverlayPositions('agricultural', year) && (
-                <div 
-                  className="map-highlight agricultural" 
-                  style={getOverlayPositions('agricultural', year)}
-                ></div>
-              )}
-              {activeLandType === 'developed' && getOverlayPositions('developed', year) && (
-                <div 
-                  className="map-highlight developed" 
-                  style={getOverlayPositions('developed', year)}
-                ></div>
-              )}
-              {/* Add more land type overlays as needed */}
-            </div>
-          </div>
-        </motion.div>
+            // Skip if we don't have polygon data for this type/year
+            if (!landTypeAreas[type.id] || !landTypeAreas[type.id][year]) return null;
+            
+            return (
+              <LayerGroup key={`${type.id}-${year}`}>
+                <Polygon
+                  positions={landTypeAreas[type.id][year]}
+                  pathOptions={{
+                    fillColor: type.color,
+                    fillOpacity: 0.3,
+                    weight: 2,
+                    color: type.color,
+                    dashArray: '5',
+                  }}
+                >
+                  <Tooltip sticky>{type.name}</Tooltip>
+                </Polygon>
+              </LayerGroup>
+            );
+          })}
+        </MapContainer>
       </div>
       
       <div className="map-info">
