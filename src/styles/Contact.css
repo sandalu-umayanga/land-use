@@ -362,3 +362,33 @@
     padding: 1.5rem;
   }
 }
+
+
+/* Add these styles to your Contact.css file */
+.researcher-profile {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.researcher-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.researcher-info .contact-method {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Make email address wrap nicely on small screens */
+.contact-method p {
+  word-break: break-word;
+}
+
+@media screen and (max-width: 576px) {
+  .researcher-info {
+    flex-direction: column;
+  }
+}

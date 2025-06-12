@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/Contact.css';
 
-// Import icons (consider adding these to your project)
-// You can use: npm install react-icons
-import { FaEnvelope, FaFacebookSquare, FaLinkedin, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
+// Import icons
+import { FaEnvelope, FaFacebookSquare, FaLinkedin, FaMapMarkerAlt, FaPhone, FaUser, FaBookOpen } from 'react-icons/fa';
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -17,22 +16,34 @@ const Contact = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitting(true);
+  e.preventDefault();
+  setSubmitting(true);
+  
+  // Create mailto URL with form data
+  const subject = encodeURIComponent(`[Land Use Research] ${formData.subject}`);
+  const body = encodeURIComponent(
+    `Name: ${formData.name}\n` +
+    `Email: ${formData.email}\n\n` +
+    `Message:\n${formData.message}`
+  );
+  
+  const mailtoLink = `mailto:madhushikawijebandara63@gmail.com?subject=${subject}&body=${body}`;
+  
+  // Open email client with pre-filled message
+  window.location.href = mailtoLink;
+  
+  // Show success message after a brief delay
+  setTimeout(() => {
+    setSubmitting(false);
+    setSubmitted(true);
     
-    // Simulate form submission
+    // Reset form after delay
     setTimeout(() => {
-      console.log('Form Data:', formData);
-      setSubmitting(false);
-      setSubmitted(true);
-      
-      // Reset form after delay
-      setTimeout(() => {
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        setSubmitted(false);
-      }, 3000);
-    }, 1500);
-  };
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setSubmitted(false);
+    }, 3000);
+  }, 1000);
+};
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -54,7 +65,7 @@ const Contact = () => {
           transition={{ duration: 0.6 }}
         >
           <h1>Contact & Community Engagement</h1>
-          <p>Have questions about our research on land use changes in Pannala DSD? Get in touch with our team through any of the following channels.</p>
+          <p>Have questions about our research on land use changes in Pannala DSD? Get in touch with our researcher through any of the following channels.</p>
         </motion.div>
 
         <div className="contact-content">
@@ -66,12 +77,32 @@ const Contact = () => {
           >
             <h2>Connect With Us</h2>
             
+            <div className="researcher-profile">
+              <div className="researcher-info">
+                <div className="contact-method">
+                  <FaUser className="contact-icon" />
+                  <div>
+                    <h3>Researcher</h3>
+                    <p>P.G.M Wijebandara</p>
+                  </div>
+                </div>
+                
+                <div className="contact-method">
+                  <FaBookOpen className="contact-icon" />
+                  <div>
+                    <h3>Subject Area</h3>
+                    <p>Geography</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <div className="contact-methods">
               <div className="contact-method">
                 <FaMapMarkerAlt className="contact-icon" />
                 <div>
                   <h3>Visit Us</h3>
-                  <p>Department of Geography<br />University of Colombo<br />Colombo, Sri Lanka</p>
+                  <p>Department of Geography<br />University of Kelaniya<br />Sri Lanka</p>
                 </div>
               </div>
               
@@ -79,15 +110,15 @@ const Contact = () => {
                 <FaPhone className="contact-icon" />
                 <div>
                   <h3>Call Us</h3>
-                  <p>+94 11 123 4567</p>
+                  <p>0766619991</p>
                 </div>
               </div>
               
-              <a href="mailto:landuse.pannala@research.com" className="contact-method">
+              <a href="mailto:madhushikawijebandara63@gmail.com" className="contact-method">
                 <FaEnvelope className="contact-icon" />
                 <div>
                   <h3>Email Us</h3>
-                  <p>landuse.pannala@research.com</p>
+                  <p>madhushikawijebandara63@gmail.com</p>
                 </div>
               </a>
             </div>
@@ -95,15 +126,15 @@ const Contact = () => {
             <div className="social-links">
               <h3>Social Media</h3>
               <div className="social-icons">
-                <a href="mailto:landuse.pannala@gmail.com" className="social-icon gmail">
+                <a href="mailto:madhushikawijebandara63@gmail.com" className="social-icon gmail">
                   <FaEnvelope />
                   <span>Gmail</span>
                 </a>
-                <a href="https://facebook.com/landusepannala" target="_blank" rel="noopener noreferrer" className="social-icon facebook">
+                <a href="https://www.facebook.com/profile.php?id=100075460316462" target="_blank" rel="noopener noreferrer" className="social-icon facebook">
                   <FaFacebookSquare />
                   <span>Facebook</span>
                 </a>
-                <a href="https://linkedin.com/in/landusepannala" target="_blank" rel="noopener noreferrer" className="social-icon linkedin">
+                <a href="https://www.linkedin.com/in/madhushika-wijebandara-010729353?trk=contact-info" target="_blank" rel="noopener noreferrer" className="social-icon linkedin">
                   <FaLinkedin />
                   <span>LinkedIn</span>
                 </a>
