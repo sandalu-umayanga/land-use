@@ -16,22 +16,34 @@ const Contact = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitting(true);
+  e.preventDefault();
+  setSubmitting(true);
+  
+  // Create mailto URL with form data
+  const subject = encodeURIComponent(`[Land Use Research] ${formData.subject}`);
+  const body = encodeURIComponent(
+    `Name: ${formData.name}\n` +
+    `Email: ${formData.email}\n\n` +
+    `Message:\n${formData.message}`
+  );
+  
+  const mailtoLink = `mailto:madhushikawijebandara63@gmail.com?subject=${subject}&body=${body}`;
+  
+  // Open email client with pre-filled message
+  window.location.href = mailtoLink;
+  
+  // Show success message after a brief delay
+  setTimeout(() => {
+    setSubmitting(false);
+    setSubmitted(true);
     
-    // Simulate form submission
+    // Reset form after delay
     setTimeout(() => {
-      console.log('Form Data:', formData);
-      setSubmitting(false);
-      setSubmitted(true);
-      
-      // Reset form after delay
-      setTimeout(() => {
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        setSubmitted(false);
-      }, 3000);
-    }, 1500);
-  };
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setSubmitted(false);
+    }, 3000);
+  }, 1000);
+};
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
